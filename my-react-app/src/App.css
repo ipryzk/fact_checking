@@ -1,0 +1,150 @@
+/* Root element styles */
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, #4B2A87, #2C1A5E); /* Dark purple gradient */
+  background-size: 400% 400%; /* Creates an animated gradient effect */
+  animation: gradientAnimation 6s ease infinite; /* Animation for the gradient */
+}
+
+/* Logo styles */
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms, transform 200ms ease-in-out; /* Smooth transform on hover */
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+  transform: scale(1.1); /* Scale logo up when hovered */
+}
+
+/* Animated background gradient */
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Card element (where inputs and buttons are) */
+.card {
+  padding: 2em;
+  background-color: rgba(0, 0, 0, 0.6); /* Dark semi-transparent background */
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Soft shadow */
+  transition: transform 300ms ease-in-out;
+}
+
+.card:hover {
+  transform: scale(1.05); /* Scale the card slightly on hover */
+}
+
+/* Inputs styling */
+input[type="text"], input[type="button"], button {
+  font-size: 1.2em;
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 8px;
+  border: 2px solid #ff7043; /* Soft orange border */
+  background-color: #4B2A87; /* Dark purple background */
+  color: white;
+  outline: none;
+  transition: transform 0.3s ease, background-color 0.3s ease; /* Smooth transition for background-color and size */
+}
+
+input[type="text"]:focus, input[type="button"]:hover, button:hover {
+  background-color: #ff7043; /* Lighter orange when hovered */
+  transform: scale(1.1); /* Increase size on hover */
+}
+
+input[type="text"] {
+  width: 80%;
+  font-size: 1.5em; /* Larger text input */
+  padding: 1.2rem;
+  background-color: rgba(255, 255, 255, 0.8); /* Light background */
+  border: none;
+  border-radius: 8px;
+}
+
+button {
+  background-color: #ff7043; /* Soft orange */
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #ff5722; /* Darker orange when hovered */
+  transform: scale(1.1); /* Make the button bigger when hovered */
+}
+
+/* Add a cool background pattern */
+body {
+  background: url('https://www.toptal.com/designers/subtlepatterns/patterns/dark-mosaic.png'); /* Mosaic pattern */
+  background-size: cover;
+  background-attachment: fixed; /* Keeps the background fixed */
+  color: white;
+}
+
+/* Add some text animation for the headings */
+h1, h2 {
+  color: white;
+  font-family: 'Arial', sans-serif;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Text shadow for a cool effect */
+  transition: transform 0.3s ease;
+}
+
+h1:hover, h2:hover {
+  transform: scale(1.1); /* Hover effect to scale the text */
+}
+
+/* Styling for checkboxes */
+label {
+  font-size: 1.2em;
+  margin: 0.5em;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+input[type="checkbox"] {
+  width: 25px; /* Make the checkboxes larger by default */
+  height: 25px;
+  transition: transform 0.3s ease;
+}
+
+input[type="checkbox"]:hover {
+  transform: scale(1.2); /* Increase checkbox size on hover */
+}
+
+/* Add media query for smaller devices */
+@media (max-width: 768px) {
+  #root {
+    padding: 1rem;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  input[type="text"], input[type="button"], button {
+    font-size: 1em;
+    padding: 0.8rem;
+  }
+
+  input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+}

@@ -16,15 +16,20 @@ class ClassificationChecker:
         # Load the tokenizer and model
         self.tokenizer = AutoTokenizer.from_pretrained(self.tokenizer_name)
         self.model = AutoModelForSequenceClassification.from_pretrained(self.model_name, num_labels=3, ignore_mismatched_sizes=True)
+        tokenizer = AutoTokenizer.from_pretrained(model_name, num_labels=3)
 
-        # Run
-        self.load_data()
-        self.process_text()
-        self.print_counts()
-    
+        self.checkpoint = torch.load("checkpoint_reliable_epoch_5.pth", map_location=torch.device("cpu"))
+        self.model.load_state_dict(self.checkpoint)
+
+        with torch.no_grad():
+            self.load_data()
+            self.process_text()
+            self.print_counts()
+        
     def load_data(self):
         """Load the input JSON file containing the text data."""
-        with open(self.input_json, "r") as file:
+        with open(self.input_json, "r", encoding="utf-8") as file:
+            print("READING JSON!")
             self.data = json.load(file)
 
     def process_text(self):
@@ -33,6 +38,7 @@ class ClassificationChecker:
         contradict_results = []
 
         for item in self.data:
+            print(f"PASS {self.pass_count}, {self.corroborate_count}, {self.contradict_count}")
             text = item.get('text')
             if text:
                 result = self.run_model(text)
@@ -56,9 +62,9 @@ class ClassificationChecker:
     def run_model(self, text: str):
         """Run the fine-tuned model on the input text and return the classification result."""
         inputs = self.tokenizer(text, return_tensors="pt", truncation=True, padding=True, max_length=512)
+        # Load tokenizer and model
 
-        with torch.no_grad():
-            outputs = self.model(**inputs)
+        outputs = self.model(**inputs)
 
         logits = outputs.logits
         predicted_class = torch.argmax(logits, dim=-1).item()
@@ -86,6 +92,7 @@ class ClassificationChecker:
 
 # Example usage:
 # Initialize the fact checker with a model and input JSON file
+"""
 fact_checker = ClassificationChecker(
     model_name="ipryzk/deberta-large-finetuned", 
     tokenizer_name="microsoft/deberta-large", 
@@ -98,3 +105,4 @@ fact_checker.process_text()
 
 # Print the counts of the labels
 fact_checker.print_counts()
+"""

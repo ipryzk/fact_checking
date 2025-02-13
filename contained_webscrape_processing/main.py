@@ -2,12 +2,13 @@ from typing import Union
 from pydantic import BaseModel
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from contained_webscrape_processing.run_spider import ClaimCrawler
-from contained_webscrape_processing.classification_runner import ClassificationChecker
+from run_spider import ClaimCrawler
+
 import requests
 import json
 
-
+from classification_runner import ClassificationChecker
+from justification_runner import JustificationChecker
 app = FastAPI()
 
 # Allow requests from your React app
@@ -32,19 +33,31 @@ class ClaimQuery(BaseModel):
 
 @app.post("/submit_claim/")
 async def submit_claim(claim_query: ClaimQuery):
+    
     print("Submitting")
+
     run = ClaimCrawler(claim_query) # webcrawler
     
     check = ClassificationChecker(
-        model_name="ipryzk/deberta-large-finetuned",  # example implementation with classifier
+        model_name="microsoft/deberta-large",  # example implementation with classifier
         tokenizer_name="microsoft/deberta-large",     # this ran directly on my host pc so move 
-        input_json="replace_with_actual_dataset"      # implement to cloud if you need remote GPUs
+        input_json="processing_dir/retrieved_articles.json"      # implement to cloud if you need remote GPUs
     )
-     # Prepare the JSON payload to send to the receiver server
-    with open('processing_dir/corroborate.json', 'r') as file:
+    
+    check = JustificationChecker(
+        model_name = "ipryzk/model-1b-llama-factcheck-16bit-head",
+        tokenizer_name= "ipryzk/model-1b-llama-factcheck-16bit-head",
+        input_corroborate = "processing_dir/corroborate.json",
+        input_contrast="processing_dir/contradict.json"
+    
+    )
+    
+    
+    # The URL of the receiving server's /receive-claim/ endpoint
+    with open('processing_dir/corroborate_justified.json', 'r') as file:
         corroborate_data = json.load(file)
 
-    with open('processing_dir/contradict.json', 'r') as file:
+    with open('processing_dir/contradict_justified.json', 'r') as file:
         contradict_data = json.load(file)
 
     # Create one single payload combining both
@@ -53,19 +66,9 @@ async def submit_claim(claim_query: ClaimQuery):
         "corroborate": corroborate_data,
         "contradict": contradict_data
     }
-
-    # The URL of the receiving server's /receive-claim/ endpoint
-    receiver_url = "http://example/receive-claim" # will need to change based on your cloud ip to integrate justifications
-
-    # Send a POST request to the receiver server with the claim data
-    response = requests.post(receiver_url, json=payload)
+    # Respond with the data back to the React frontend
+    return payload
     
-
-    # Return the response from the receiver server
-    return {"status": response.status_code, "response": response.json()}
     
-
-    
- 
 
 # TO WORK ON ATTMEPTING TO PROCESS ERRORS, START REACT SCRIPT AND SERVER SIMULTANEOUSLY

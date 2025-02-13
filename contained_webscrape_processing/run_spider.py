@@ -1,8 +1,8 @@
 import sys
 import logging
 from scrapy.crawler import CrawlerProcess
-from contained_webscrape_processing.webscraper import CrossRefSpider
-from contained_webscrape_processing.article_to_json import ArticleProcessor
+from webscraper import CrossRefSpider
+from article_to_json import ArticleProcessor
 from pydantic import BaseModel
 import traceback
 

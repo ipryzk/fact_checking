@@ -86,10 +86,6 @@ class ArticleProcessor:
             
         return chunks
 
-
-
-
-
     def process_file(self, input_file, output_file):
         """
         Process an input file line by line to extract DOIs and article content.
